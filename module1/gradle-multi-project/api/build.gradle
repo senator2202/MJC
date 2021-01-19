@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group 'com.epam.api'
+version '1.0-SNAPSHOT'
+
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
+}
+
+dependencies {
+    implementation project(':core')
+}

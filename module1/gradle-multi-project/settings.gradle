@@ -1,0 +1,5 @@
+rootProject.name = 'multi-project'
+include 'core'
+include 'api'
+project(':core').projectDir = file('core')
+project(':api').projectDir = file('api')
