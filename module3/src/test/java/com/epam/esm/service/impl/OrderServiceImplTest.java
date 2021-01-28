@@ -1,5 +1,6 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.controller.exception.ExceptionProvider;
 import com.epam.esm.controller.exception.GiftEntityNotFoundException;
 import com.epam.esm.data_provider.StaticDataProvider;
 import com.epam.esm.model.dao.GiftCertificateDao;
@@ -17,7 +18,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -32,8 +34,11 @@ class OrderServiceImplTest {
     @Mock
     private GiftCertificateDao giftCertificateDao;
 
+    @Mock
+    private ExceptionProvider exceptionProvider;
+
     @InjectMocks
-    private final OrderService service = new OrderServiceImpl(orderDao, userDao, giftCertificateDao);
+    private final OrderService service = new OrderServiceImpl(orderDao, userDao, giftCertificateDao, exceptionProvider);
 
     @BeforeEach
     void setUp() {
@@ -52,14 +57,14 @@ class OrderServiceImplTest {
 
     @Test
     void addUserNotExisting() {
-        when(userDao.findById(11111L)).thenReturn(Optional.empty());
+        when(userDao.findById(11111L)).thenThrow(GiftEntityNotFoundException.class);
         assertThrows(GiftEntityNotFoundException.class, () -> service.add(11111L, 1L));
     }
 
     @Test
     void addCertificateNotExisting() {
         when(userDao.findById(1L)).thenReturn(Optional.of(StaticDataProvider.USER));
-        when(giftCertificateDao.findById(11111L)).thenReturn(Optional.empty());
+        when(giftCertificateDao.findById(11111L)).thenThrow(GiftEntityNotFoundException.class);
         assertThrows(GiftEntityNotFoundException.class, () -> service.add(1L, 11111L));
     }
 
@@ -74,11 +79,8 @@ class OrderServiceImplTest {
 
     @Test
     void findByIdUserNotExisting() {
-        when(userDao.findById(11111L)).thenReturn(Optional.empty());
+        when(userDao.findById(11111L)).thenThrow(GiftEntityNotFoundException.class);
         assertThrows(GiftEntityNotFoundException.class, () -> service.findUserOrderById(11111L, 1L));
-        /*Optional<OrderDTO> actual = service.findUserOrderById(11111L, 1L);
-        Optional<OrderDTO> expected = Optional.empty();
-        assertEquals(actual, expected);*/
     }
 
     @Test
@@ -95,11 +97,5 @@ class OrderServiceImplTest {
         List<OrderDTO> actual = service.findOrdersByUserId(1L, 2, 10);
         List<OrderDTO> expected = StaticDataProvider.ORDER_DTO_LIST_LIMIT;
         assertEquals(actual, expected);
-    }
-
-    @Test
-    void orderBelongsToUser() {
-        when(orderDao.findById(1L)).thenReturn(Optional.of(StaticDataProvider.ORDER));
-        assertTrue(service.orderBelongsToUser(1L, 1L));
     }
 }
