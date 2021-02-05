@@ -11,6 +11,7 @@ import com.epam.esm.model.entity.Tag;
 import com.epam.esm.model.entity.User;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,7 +50,9 @@ public class StaticDataProvider {
     public static final List<Order> ORDER_LIST_LIMIT;
     public static final List<OrderDTO> ORDER_DTO_LIST;
     public static final List<OrderDTO> ORDER_DTO_LIST_LIMIT;
-
+    public static final GiftCertificate ADDING_GIFT_CERTIFICATE;
+    public static final GiftCertificate UPDATING_GIFT_CERTIFICATE;
+    public static final Order ADDING_ORDER;
 
     static {
         TAG_DTO = new TagDTO(1L, "Вязание");
@@ -80,6 +83,25 @@ public class StaticDataProvider {
                 "2021-01-13T12:42Z",
                 List.of(TAG)
         );
+        ADDING_GIFT_CERTIFICATE = new GiftCertificate(
+                null,
+                "English courses",
+                "English courses in school of foreign languages SkyEng",
+                BigDecimal.valueOf(250.00),
+                180,
+                "2021-01-13T12:42Z",
+                "2021-01-13T12:42Z",
+                new ArrayList<>(List.of(new Tag(1L, "Активность"), new Tag(19L, "Развлечения")))
+        );
+        UPDATING_GIFT_CERTIFICATE = new GiftCertificate(
+                1L,
+                "Spanish courses",
+                "Spanish courses in school of foreign languages SkySpain",
+                BigDecimal.valueOf(255.00),
+                180,
+                "2021-01-13T12:42Z",
+                "2021-01-13T12:42Z",
+                List.of(new Tag(8L, "Активность"), new Tag(1L, "Отдых")));
         GIFT_CERTIFICATE_DTO = new GiftCertificateDTO(
                 1L,
                 "English courses",
@@ -107,5 +129,13 @@ public class StaticDataProvider {
         ORDER_LIST_LIMIT = Collections.nCopies(LIMIT, ORDER);
         ORDER_DTO_LIST = Collections.nCopies(10, ORDER_DTO);
         ORDER_DTO_LIST_LIMIT = Collections.nCopies(LIMIT, ORDER_DTO);
+        ADDING_ORDER = new Order(
+                null,
+                new User(1L, "Alex"),
+                new GiftCertificate(12L, "SilverScreen", "Просмотр любого кинофильма", BigDecimal.valueOf(15.00),
+                        45, "2020-12-18T09:22Z", "2020-12-18T09:25Z", List.of(new Tag(7L, "Кино"))),
+                "2021-02-05T17:05:55.6995333",
+                BigDecimal.valueOf(15.00)
+        );
     }
 }
